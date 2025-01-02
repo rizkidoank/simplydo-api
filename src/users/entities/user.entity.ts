@@ -14,4 +14,7 @@ export class User extends BaseEntity {
 
   @Column()
   name: string;
+
+  @Column({ default: 'user' })
+  role: string;
 }

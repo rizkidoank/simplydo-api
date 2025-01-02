@@ -34,7 +34,11 @@ export class AuthService {
     if (!validatedUser) {
       throw new UnauthorizedException();
     }
-    const payload: JwtPayload = { username: validatedUser.username, sub: validatedUser.id };
+    const payload: JwtPayload = {
+      username: validatedUser.username,
+      sub: validatedUser.id,
+      role: validatedUser.role,
+    };
 
     return {
       access_token: await this.jwtService.signAsync(payload),

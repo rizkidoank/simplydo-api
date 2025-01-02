@@ -6,6 +6,8 @@ import { plainToInstance } from 'class-transformer';
 import { UserResponseDto } from './dto/response.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from '../auth/auth.decorator';
+import { RoleGuard } from '../auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -16,7 +18,8 @@ export class UsersController {
     return await this.usersService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RoleGuard)
+  @Role('admin')
   @Get()
   async findAll() {
     const users: User[] = await this.usersService.findAll();

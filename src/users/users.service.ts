@@ -32,7 +32,7 @@ export class UsersService {
     const hashedPassword: string = await this.encryptionService.hashPassword(
       createUserDto.password,
     );
-    const user = { ...createUserDto, password: hashedPassword };
+    const user = { ...createUserDto, password: hashedPassword, role: 'user' };
     return this.userRepository.save(user);
   }
 

@@ -18,6 +18,7 @@ export class RegisterResponseDto {
 export class JwtValidateResponseDto {
   userId: string;
   username: string;
+  role: string | undefined;
 }
 
 export class JwtLoginResponseDto {
