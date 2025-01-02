@@ -21,7 +21,6 @@ describe('ConfigService', () => {
 
   it('should be defined', () => {
     expect(configService).toBeDefined();
-    console.log(configService);
   });
 
   it('should return correct DATABASE_HOST string', () => {

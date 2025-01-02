@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { BaseResponseDto } from 'src/shared/dto/base.response';
+import { BaseResponseDto } from '../../shared/dto/base.response';
 
 @Exclude()
 export class UserResponseDto extends BaseResponseDto {

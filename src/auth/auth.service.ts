@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { EncryptionsService } from 'src/encryptions/encryptions.service';
-import { UsersService } from 'src/users/users.service';
+import { EncryptionsService } from '../encryptions/encryptions.service';
+import { UsersService } from '../users/users.service';
 import { JwtPayload } from './auth.interface';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { User } from 'src/users/entities/user.entity';
+import { User } from '../users/entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 import { RegisterResponseDto } from './dto/responses.dto';
 
@@ -14,7 +13,6 @@ import { RegisterResponseDto } from './dto/responses.dto';
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
     private readonly encryptionsService: EncryptionsService,
     private readonly usersService: UsersService,
   ) {}
