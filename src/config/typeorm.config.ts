@@ -18,6 +18,11 @@ const AppDataSource = new DataSource({
   migrations: ['src/database/migrations/*-migration.ts'],
   migrationsRun: false,
   logging: true,
+  ssl: configService.get<string>('NODE_ENV') === 'production',
+  extra: {
+    ssl:
+      configService.get<string>('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : null,
+  },
 });
 
 export default AppDataSource;

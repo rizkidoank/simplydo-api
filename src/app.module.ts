@@ -22,8 +22,15 @@ import { TasksModule } from './tasks/tasks.module';
         password: configService.get<string>('DATABASE_PASS'),
         database: configService.get<string>('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        autoLoadEntities: true,
-        synchronize: true,
+        synchronize: configService.get<string>('NODE_ENV') !== 'production',
+        logging: configService.get<string>('NODE_ENV') !== 'production',
+        ssl: configService.get<string>('NODE_ENV') === 'production',
+        extra: {
+          ssl:
+            configService.get<string>('NODE_ENV') === 'production'
+              ? { rejectUnauthorized: false }
+              : null,
+        },
       }),
       inject: [ConfigService],
     }),
