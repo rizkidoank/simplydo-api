@@ -3,7 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Task } from './entities/task.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 
 @Injectable()
@@ -30,6 +30,15 @@ export class TasksService {
     return this.taskRepository.find({
       where: { user: { id: userId } },
       relations: ['user'],
+      withDeleted: false,
+    });
+  }
+
+  async findDeleted(userId: string): Promise<Task[]> {
+    return this.taskRepository.find({
+      where: { user: { id: userId }, deletedAt: Not(IsNull()) },
+      relations: ['user'],
+      withDeleted: true,
     });
   }
 
@@ -38,6 +47,7 @@ export class TasksService {
       const task = await this.taskRepository.findOne({
         where: { id, user: { id: userId } },
         relations: ['user'],
+        withDeleted: false,
       });
 
       if (!task) {
@@ -61,6 +71,22 @@ export class TasksService {
 
   async remove(id: string, userId: string): Promise<void> {
     const task = await this.findOne(id, userId);
-    await this.taskRepository.remove(task);
+    await this.taskRepository.softDelete({ id: task.id });
+  }
+
+  async removeTrash(userId: string): Promise<void> {
+    const tasks: Task[] = await this.findDeleted(userId);
+    await this.taskRepository.remove(tasks);
+  }
+
+  async restore(id: string, userId: string): Promise<void> {
+    const task: Task | null = await this.taskRepository.findOne({
+      where: { id, user: { id: userId }, deletedAt: Not(IsNull()) },
+      withDeleted: true,
+    });
+    if (!task) {
+      throw new NotFoundException(`task with id ${id} not found`);
+    }
+    await this.taskRepository.recover(task);
   }
 }

@@ -31,6 +31,19 @@ export class TasksController {
     return plainToInstance(TaskResponseDto, tasks);
   }
 
+  @Get('trash')
+  async findDeleted(@Req() request: Request): Promise<TaskResponseDto[]> {
+    const user: User = request.user as User;
+    const tasks: Task[] = await this.tasksService.findDeleted(user.id);
+    return plainToInstance(TaskResponseDto, tasks);
+  }
+
+  @Delete('trash')
+  async emptyTrash(@Req() request: Request): Promise<void> {
+    const user: User = request.user as User;
+    await this.tasksService.removeTrash(user.id);
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() request: Request): Promise<TaskResponseDto> {
     const user: User = request.user as User;
@@ -50,8 +63,14 @@ export class TasksController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() request: Request) {
+  async remove(@Param('id') id: string, @Req() request: Request): Promise<void> {
     const user: User = request.user as User;
     return this.tasksService.remove(id, user.id);
+  }
+
+  @Post(':id/recover')
+  async recover(@Param('id') id: string, @Req() request: Request): Promise<void> {
+    const user: User = request.user as User;
+    return this.tasksService.restore(id, user.id);
   }
 }
