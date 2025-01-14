@@ -131,3 +131,8 @@ dist
 
 .direnv
 
+
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
